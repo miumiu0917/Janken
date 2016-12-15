@@ -1,6 +1,34 @@
 #! ruby -Ku
 require "kconv"
 
+module Hand
+  ROCK = 1
+  SCISSORS = 2
+  PAPER = 3
+
+  HAND_NAME = {
+  	Hand::ROCK => 'グー',
+  	Hand::SCISSORS => 'チョキ',
+  	Hand::PAPER => 'パー'
+  }
+end
+
+module Result
+	EVEN = 0
+	LOSE = 1
+	WIN = 2
+
+	def self.result(input, enemy)
+		(input - enemy + 3) % 3
+	end
+end
+
+module Enemy
+	def self.enemy_hand
+		rand(2) + 1
+	end
+end
+
 def getInput
 	print(Kconv.tosjis("(あなたの手を選んでください)"), "\n")
 	print(Kconv.tosjis("1:グー　2:チョキ　3:パー"), "\n", ">")
@@ -10,13 +38,12 @@ def getInput
 
 	if validateInput(input) then
 		return input
-	else
-		getInput
 	end
+	getInput
 end
 
 def validateInput(input)
-	if input == 1 || input == 2 || input == 3 then
+	if input == Hand::ROCK || input == Hand::SCISSORS || input == Hand::PAPER then
 		return true
 	end
 	print(Kconv.tosjis("不正な入力値です"), "\n")
@@ -24,29 +51,20 @@ def validateInput(input)
 end
 
 def judge(input)
-	enemy = rand(2) + 1
-	print(Kconv.tosjis("あなた："), toStringHand(input),"\n")
-	print(Kconv.tosjis("あいて："), toStringHand(enemy),"\n")
+	enemy = Enemy.enemy_hand
+	print(Kconv.tosjis("あなた："), Hand::HAND_NAME[input],"\n")
+	print(Kconv.tosjis("あいて："), Hand::HAND_NAME[enemy],"\n")
 
-	case (input - enemy + 3) % 3
-	when 0 then
+	result =  Result.result(input, enemy)
+	if result == Result::EVEN
 		print(Kconv.tosjis("あいこです"),"\n")
-		doJanken()
-	when 1 then
-		print(Kconv.tosjis("あなたの負けです"),"\n")
-	else
-		print(Kconv.tosjis("あなたの勝ちです"),"\n")
+		doJanken
 	end
-end
-
-def toStringHand(hand)
-	case hand
-	when 1 then
-		return "グー"
-	when 2 then
-		return "チョキ"
-	else
-		return "パー"
+	if result == Result::LOSE
+		print(Kconv.tosjis("あなたの負けです"),"\n")
+	end
+	if result == Result::WIN
+		print(Kconv.tosjis("あなたの勝ちです"),"\n")
 	end
 end
 
