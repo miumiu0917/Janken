@@ -69,7 +69,7 @@ def judge(input)
 	print(Kconv.tosjis("あいて："), Hand::HAND_NAME[enemy],"\n")
 
 	result =  Result.result input, enemy
-	Result.display(result)
+	Result.display result
 end
 
 def doJanken()
