@@ -21,6 +21,19 @@ module Result
 	def self.result(input, enemy)
 		(input - enemy + 3) % 3
 	end
+
+	def self.display(result)
+		if result == Result::EVEN
+			print(Kconv.tosjis("あいこです"),"\n")
+			doJanken
+		end
+		if result == Result::LOSE
+			print(Kconv.tosjis("あなたの負けです"),"\n")
+		end
+		if result == Result::WIN
+			print(Kconv.tosjis("あなたの勝ちです"),"\n")
+		end
+	end
 end
 
 module Enemy
@@ -55,22 +68,13 @@ def judge(input)
 	print(Kconv.tosjis("あなた："), Hand::HAND_NAME[input],"\n")
 	print(Kconv.tosjis("あいて："), Hand::HAND_NAME[enemy],"\n")
 
-	result =  Result.result(input, enemy)
-	if result == Result::EVEN
-		print(Kconv.tosjis("あいこです"),"\n")
-		doJanken
-	end
-	if result == Result::LOSE
-		print(Kconv.tosjis("あなたの負けです"),"\n")
-	end
-	if result == Result::WIN
-		print(Kconv.tosjis("あなたの勝ちです"),"\n")
-	end
+	result =  Result.result input, enemy
+	Result.display(result)
 end
 
 def doJanken()
 	input = getInput
-	judge(input)
+	judge input
 end
 
 print(Kconv.tosjis("最初はグー、じゃんけん、"), "\n")
